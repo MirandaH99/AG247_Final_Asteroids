@@ -12,8 +12,15 @@ namespace MHanks_Lab5
     /// </summary>
     public class Game1 : GameApp
     {
-        Sprite Player;
-        
+        //Sprite Player;
+
+        Player p;
+
+        BaseGameObject bGO;
+
+        TimeSpan ts = TimeSpan.FromSeconds(5);
+
+
 
         SpriteFont sF;
 
@@ -54,6 +61,8 @@ namespace MHanks_Lab5
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
+            p = new Player();
+
         }
 
         /// <summary>
@@ -65,11 +74,11 @@ namespace MHanks_Lab5
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Player = new Sprite("Cursor");
-            Player.scale = .025f;
-            Player.position = new Vector2(1280/2, 960/2);
-            Player.origin.X = Player.texture.Width / 2;
-            Player.origin.Y = Player.texture.Height / 2;
+            //Player = new Sprite("Cursor");
+            //Player.scale = .025f;
+            //Player.position = new Vector2(1280/2, 960/2);
+            //Player.origin.X = Player.texture.Width / 2;
+            //Player.origin.Y = Player.texture.Height / 2;
 
            
           
@@ -100,35 +109,46 @@ namespace MHanks_Lab5
             {
                 Exit();
             }
+
+            //if (ts.TotalSeconds <= 0)
+            //{
+            //    if (asteroids.numberOfAsteroids <= asteroids.maxAsteroids)
+            //    {
+            //        SpawnAsteroid(gameTime);
+            //    }
+            //    ts = TimeSpan.FromSeconds(5);
+            //}
+
+            ts -= gameTime.ElapsedGameTime;
+
             if (IsKeyHeld(Keys.W))            //Up
             {
-                Player.position.Y -= 7.5f;
+                p.playerSprite.position.Y -= 7.5f;
             }
             if (IsKeyHeld(Keys.A))           //Left
             {
-                Player.position.X -= 7.5f;
+                p.playerSprite.position.X -= 7.5f;
             }
             if (IsKeyHeld(Keys.S))           //Down
             {
-                Player.position.Y += 7.5f;
+                p.playerSprite.position.Y += 7.5f;
             }
             if (IsKeyHeld(Keys.D))           //Right
             {
-                Player.position.X += 7.5f;
+                p.playerSprite.position.X += 7.5f;
             }
             if (IsKeyHeld(Keys.E))           //rotate clockwise
             {
-                Player.rotation += .15f;
+                p.playerSprite.rotation += .15f;
             }
             if (IsKeyHeld(Keys.Q))           //rotate counter-clockwise
             {
-                Player.rotation -= .15f;
+                p.playerSprite.rotation -= .15f;
             }
             if (MouseButtonIsPressed("LeftButton") || IsKeyPressed(Keys.Space))      //shoot
             {
                 FireBullet(gameTime);
             }
-
 
             // Update All Objects
             if (SceneList.Count > 0)
@@ -153,8 +173,16 @@ namespace MHanks_Lab5
         public void FireBullet(GameTime gameTime)
         {
             Bullet b = new Bullet();
-            b.Position = Player.position;
-            b.Velocity = LinePrimatives.AngleToV2(MathHelper.ToDegrees(Player.rotation), b.moveSpeed);
+            b.Position = p.playerSprite.position;
+            b.Velocity = LinePrimatives.AngleToV2(MathHelper.ToDegrees(p.playerSprite.rotation), b.moveSpeed);
+        }
+
+        public void SpawnAsteroid(GameTime gameTime)
+        {
+            //Random randoNum = new Random();
+            Asteroids a = new Asteroids();
+            a.Position = new Vector2(0, bGO.ScreenSize.Y);
+            //a.Velocity = LinePrimatives.AngleToV2(MathHelper.ToDegrees(), a.moveSpeed);
         }
 
         /// <summary>
@@ -167,9 +195,9 @@ namespace MHanks_Lab5
 
             spriteBatch.Begin();
 
-            Player.Draw(spriteBatch);
+            p.playerSprite.Draw(spriteBatch);
 
-            spriteBatch.DrawString(sF, "Player Position: " + Player.position, new Vector2(50, 50), Color.Aqua);
+            spriteBatch.DrawString(sF, "Player Position: " + p.playerSprite.position, new Vector2(50, 50), Color.Aqua);
 
             // Draw items in our Scene List
             foreach (BaseGameObject go in SceneList)

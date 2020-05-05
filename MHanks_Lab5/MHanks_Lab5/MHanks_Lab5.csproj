@@ -41,12 +41,14 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Content\Asteroids.cs" />
     <Compile Include="Content\BaseGameObject.cs" />
     <Compile Include="Content\Bullet.cs" />
     <Compile Include="Content\GameApp.cs" />
     <Compile Include="Content\Line.cs" />
     <Compile Include="Content\LineDrawer.cs" />
     <Compile Include="Content\LinePrimatives.cs" />
+    <Compile Include="Content\Player.cs" />
     <Compile Include="Content\Sprite.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
