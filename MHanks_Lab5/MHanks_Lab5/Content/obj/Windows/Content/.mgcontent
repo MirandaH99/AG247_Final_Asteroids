@@ -4,10 +4,10 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Miranda/Desktop/SchoolWork/Aa_Spring2020/AG_MathAndPhysics/Lab05/MHanks_Lab5/MHanks_Lab5/Content/Cat.png</File>
-    <File>C:/Users/Miranda/Desktop/SchoolWork/Aa_Spring2020/AG_MathAndPhysics/Lab05/MHanks_Lab5/MHanks_Lab5/Content/Cursor.png</File>
-    <File>C:/Users/Miranda/Desktop/SchoolWork/Aa_Spring2020/AG_MathAndPhysics/Lab05/MHanks_Lab5/MHanks_Lab5/Content/Font.spritefont</File>
-    <File>C:/Users/Miranda/Desktop/SchoolWork/Aa_Spring2020/AG_MathAndPhysics/Lab05/MHanks_Lab5/MHanks_Lab5/Content/heart.png</File>
+    <File>D:/GIT/AG247_Final_Asteroids/MHanks_Lab5/MHanks_Lab5/Content/Cat.png</File>
+    <File>D:/GIT/AG247_Final_Asteroids/MHanks_Lab5/MHanks_Lab5/Content/Cursor.png</File>
+    <File>D:/GIT/AG247_Final_Asteroids/MHanks_Lab5/MHanks_Lab5/Content/Font.spritefont</File>
+    <File>D:/GIT/AG247_Final_Asteroids/MHanks_Lab5/MHanks_Lab5/Content/heart.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

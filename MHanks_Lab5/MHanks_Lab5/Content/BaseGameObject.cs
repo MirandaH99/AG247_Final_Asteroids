@@ -11,7 +11,8 @@ namespace MHanks_Lab5
 {
     public class BaseGameObject
     {
-        public Vector2 ScreenSize = new Vector2(1280, 960);
+        public static Vector2 ScreenSize = new Vector2(1280, 960);
+        public static int ScreenBuffer = -100; 
 
         public bool isActive = true;
         public Vector2 Position = Vector2.Zero;
@@ -19,12 +20,16 @@ namespace MHanks_Lab5
         public float Rotation = 0;
         public Vector2 Velocity;
         public bool HasMaxiumVelocity = false; 
-        public float MaxiumVelocity = float.MaxValue; 
-        
+        public float MaxiumVelocity = float.MaxValue;
+        public Rectangle Collision;
+        public BaseGameObject owner = null;
+        public bool IgnoreOwner = false; 
+
+
 
         public BaseGameObject()
         {
-            ((Game1)GameApp.instance).SceneList.Add(this); 
+            GameApp.instance.AddList.Add(this); 
 
             InitalizeObject(); 
         }
@@ -39,7 +44,7 @@ namespace MHanks_Lab5
             if (isActive)
             {
 
-                Update(gameTime);
+              
                 if (HasMaxiumVelocity)
                 { 
                     ScrubVelocity();
@@ -47,7 +52,43 @@ namespace MHanks_Lab5
 
                 float gT = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 Position += Velocity * gT;
+                Update(gameTime);
+
+
+
             }
+        }
+
+
+        public virtual void CheckForCollisions()
+        {
+            foreach (BaseGameObject obj in GameApp.instance.SceneList)
+            {
+                if (obj == this) // ignore ourself 
+                {
+                    continue;
+                }
+                if (owner != null)
+                {
+                    if ((obj == owner) && IgnoreOwner)
+                    {
+                        continue;
+                    }
+                   
+                }
+
+                if (this.Collision.Intersects(obj.Collision))
+                {
+                    OnCollision(obj); 
+                }
+
+
+            }
+        }
+
+        public virtual void OnCollision(BaseGameObject other)
+        {
+
         }
 
         public void ScrubVelocity()
@@ -79,10 +120,13 @@ namespace MHanks_Lab5
 
         }
 
-        public void Destroy()
+        public void Destroy(bool CallOnDestroy = true)
         {
-            OnDestroy(); 
-            ((Game1)GameApp.instance).DestroyList.Add(this);
+            if (CallOnDestroy)
+            {
+                OnDestroy();
+            }
+            GameApp.instance.DestroyList.Add(this);
         }
 
         public virtual void OnDestroy()

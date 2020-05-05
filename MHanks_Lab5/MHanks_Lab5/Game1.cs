@@ -28,17 +28,13 @@ namespace MHanks_Lab5
         float test2 = 100;
 
 
-        //public List bullets = new List();
-        public List<BaseGameObject> SceneList;
-        public List<BaseGameObject> DestroyList;
 
         //TO DO: Make a list of gameobjects that calls their update functions
 
 
         public Game1()
         {
-            SceneList = new List<BaseGameObject>();
-            DestroyList = new List<BaseGameObject>();
+       
 
         }
 
@@ -61,8 +57,10 @@ namespace MHanks_Lab5
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
-            p = new Player();
+            BaseGameObject.ScreenSize = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 
+
+            SetGame();
         }
 
         /// <summary>
@@ -74,19 +72,7 @@ namespace MHanks_Lab5
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //Player = new Sprite("Cursor");
-            //Player.scale = .025f;
-            //Player.position = new Vector2(1280/2, 960/2);
-            //Player.origin.X = Player.texture.Width / 2;
-            //Player.origin.Y = Player.texture.Height / 2;
-
-           
-          
-           
-
             sF = Content.Load<SpriteFont>("Font");
-
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -97,6 +83,15 @@ namespace MHanks_Lab5
         {
             // TODO: Unload any non ContentManager content here
         }
+
+        public override void SetGame()
+        {
+            ClearScene(); 
+            p = new Player();
+            new Asteroids();
+            new Asteroids();
+        }
+
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -150,24 +145,13 @@ namespace MHanks_Lab5
                 FireBullet(gameTime);
             }
 
-            // Update All Objects
-            if (SceneList.Count > 0)
+            if (IsKeyPressed(Keys.Tab))           //Testing
             {
-                foreach (BaseGameObject go in SceneList)
-                {
-                    go.ObjectUpdate(gameTime);
-                }
+                Asteroids a = new Asteroids();
+            
             }
 
-            // Clean up objects that are for Destruction
-            if (DestroyList.Count > 0)
-            {
-                foreach (BaseGameObject go in DestroyList)
-                {
-                    SceneList.Remove(go); 
-                }
-                DestroyList.Clear();
-            }
+
         }
 
         public void FireBullet(GameTime gameTime)
@@ -180,8 +164,8 @@ namespace MHanks_Lab5
         public void SpawnAsteroid(GameTime gameTime)
         {
             //Random randoNum = new Random();
-            Asteroids a = new Asteroids();
-            a.Position = new Vector2(0, bGO.ScreenSize.Y);
+            //Asteroids a = new Asteroids();
+            //a.Position = new Vector2(0, bGO.ScreenSize.Y);
             //a.Velocity = LinePrimatives.AngleToV2(MathHelper.ToDegrees(), a.moveSpeed);
         }
 
@@ -195,7 +179,7 @@ namespace MHanks_Lab5
 
             spriteBatch.Begin();
 
-            p.playerSprite.Draw(spriteBatch);
+            //p.playerSprite.Draw(spriteBatch);
 
             spriteBatch.DrawString(sF, "Player Position: " + p.playerSprite.position, new Vector2(50, 50), Color.Aqua);
 

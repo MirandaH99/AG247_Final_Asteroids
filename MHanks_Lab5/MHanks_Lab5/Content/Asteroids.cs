@@ -15,56 +15,107 @@ namespace MHanks_Lab5
     {
         private Sprite asteroidSprite;
 
-        public float moveSpeed;
+        public float moveSpeed = 50;
 
         public float numberOfAsteroids = 0;
 
         public float maxAsteroids = 10;
 
-        public Rectangle asterRectangle;
+       
 
-        public Asteroids()
-        {
-
-        }
 
         public override void InitalizeObject()
         {
             // set these in child classes... 
             asteroidSprite = new Sprite("Cat");
-            asteroidSprite.scale = .025f;
+            asteroidSprite.scale = .25f;
             asteroidSprite.origin.X = asteroidSprite.texture.Width / 2;
             asteroidSprite.origin.Y = asteroidSprite.texture.Height / 2;
 
-            // Set this a object creation
-            //Position = center; 
+            Collision = new Rectangle(0, 0, (int)(asteroidSprite.texture.Width * asteroidSprite.scale), (int)(asteroidSprite.texture.Height * asteroidSprite.scale));
 
-            moveSpeed = 50;
+            SetSpawnandHeading(); 
+        }
 
-            Velocity = LinePrimatives.AngleToV2(Rotation, moveSpeed);
+        public virtual void SetSpawnandHeading()
+        {
+            Vector2 Spawnlocation = Vector2.Zero;
+            Vector2 HeadingLocation = Vector2.Zero;
+            int side = GameApp.random.Next(4);
 
-            //Velocity.X = moveSpeed;
-            //Velocity.Y = moveSpeed;
+            if (side == 0) // Left
+            {
+                Spawnlocation.X = -ScreenBuffer;
+                Spawnlocation.Y = GameApp.random.Next((int)ScreenSize.Y);
+                HeadingLocation.X = ScreenSize.X + ScreenBuffer;
+                HeadingLocation.Y = GameApp.random.Next((int)ScreenSize.Y);
+            }
+            if (side == 1) // Right
+            {
+                Spawnlocation.X = ScreenSize.X + ScreenBuffer;
+                Spawnlocation.Y = GameApp.random.Next((int)ScreenSize.Y);
+                HeadingLocation.X = -ScreenBuffer;
+                HeadingLocation.Y = GameApp.random.Next((int)ScreenSize.Y);
+            }
+            if (side == 2) // Top
+            {
+                Spawnlocation.X = GameApp.random.Next((int)ScreenSize.X);
+                Spawnlocation.Y = -ScreenBuffer;
+                HeadingLocation.X = GameApp.random.Next((int)ScreenSize.X);
+                HeadingLocation.Y = ScreenSize.Y + ScreenBuffer;
+            }
+            if (side == 3) // Bottom
+            {
+                Spawnlocation.X = GameApp.random.Next((int)ScreenSize.X);
+                Spawnlocation.Y = ScreenSize.Y + ScreenBuffer;
+                HeadingLocation.X = GameApp.random.Next((int)ScreenSize.X);
+                HeadingLocation.Y = -ScreenBuffer;
+            }
 
+            Position = Spawnlocation;
+            asteroidSprite.position = Spawnlocation;
 
-            asterRectangle = new Rectangle(0, 0, asteroidSprite.texture.Width, asteroidSprite.texture.Height);
-
+            Velocity = (HeadingLocation - Spawnlocation);
+            Velocity.Normalize();
+            Velocity *= moveSpeed; 
+            
         }
 
         public override void Update(GameTime gameTime)
         {
-            asterRectangle.Location = Position.ToPoint();
+            Collision.Location = (Position - (asteroidSprite.origin * asteroidSprite.scale)).ToPoint();
 
             if ((Position.X >= ScreenSize.X || Position.Y >= ScreenSize.Y) || (Position.X <= 0 || Position.Y <= 0))
             {
                 Destroy();
+                return; 
             }
 
+            CheckForCollisions(); 
+
+        }
+
+        public override void OnCollision(BaseGameObject other)
+        {
+            if (other is Asteroids)
+            {
+                return; 
+            }
+
+            Destroy();
+            other.Destroy();
+            
+            new Asteroids();
+            new Asteroids();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             asteroidSprite.position = Position;
+            if (Collision != null)
+            {
+                LinePrimatives.DrawRectangle(spriteBatch, 3, Color.Red, Collision);
+            }
             asteroidSprite.Draw(spriteBatch);
         }
     }

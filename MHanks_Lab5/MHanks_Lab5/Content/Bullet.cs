@@ -18,8 +18,7 @@ namespace MHanks_Lab5
         private Sprite bulletSprite;
 
         public float moveSpeed;
-        public Rectangle bulletRectangle;
-
+       
         public Bullet()
         {
           
@@ -38,20 +37,20 @@ namespace MHanks_Lab5
 
             moveSpeed = 50;
 
-            Velocity = LinePrimatives.AngleToV2(Rotation, moveSpeed); 
+            Velocity = LinePrimatives.AngleToV2(Rotation, moveSpeed);
 
             //Velocity.X = moveSpeed;
             //Velocity.Y = moveSpeed;
-    
 
-            bulletRectangle = new Rectangle(0, 0, bulletSprite.texture.Width, bulletSprite.texture.Height);
+
+            Collision = new Rectangle(0, 0, (int)(bulletSprite.texture.Width* bulletSprite.scale), (int)(bulletSprite.texture.Height*bulletSprite.scale));
 
 
         }
 
         public override void Update(GameTime gameTime)
-        {        
-            bulletRectangle.Location = Position.ToPoint(); 
+        {
+            Collision.Location = Position.ToPoint(); 
 
             if((Position.X>= ScreenSize.X || Position.Y >= ScreenSize.Y) || (Position.X <= 0 || Position.Y <= 0))
             {
@@ -62,8 +61,15 @@ namespace MHanks_Lab5
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            bulletSprite.position = Position; 
+
+            bulletSprite.position = Position;
+            if (Collision != null)
+            {
+                LinePrimatives.DrawRectangle(spriteBatch, 3, Color.Red, Collision);
+            }
+
             bulletSprite.Draw(spriteBatch);
+
         }
 
       

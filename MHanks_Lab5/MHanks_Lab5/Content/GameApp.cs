@@ -34,7 +34,17 @@ namespace MHanks_Lab5
         /// <summary>
         /// Color to Clear the Screen With
         /// </summary>
-        public Color clearColor = Color.Black; 
+        public Color clearColor = Color.Black;
+
+        public static Random random; 
+
+
+        //public List bullets = new List();
+        public List<BaseGameObject> SceneList;
+        public List<BaseGameObject> DestroyList;
+        public List<BaseGameObject> AddList;
+
+
 
         public GameApp()
         {
@@ -42,6 +52,12 @@ namespace MHanks_Lab5
             graphics = new GraphicsDeviceManager(this);
             
             Content.RootDirectory = "Content";
+
+            SceneList = new List<BaseGameObject>();
+            DestroyList = new List<BaseGameObject>();
+            AddList = new List<BaseGameObject>();
+
+            random = new Random();
         }
 
         /// <summary>
@@ -68,6 +84,11 @@ namespace MHanks_Lab5
             base.Initialize();
         }
 
+        public virtual void SetGame()
+        {
+
+        }
+
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
@@ -84,7 +105,9 @@ namespace MHanks_Lab5
         protected override void UnloadContent()
         {
             // Stub, Write your code in GameMode
+
         }
+
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -107,7 +130,37 @@ namespace MHanks_Lab5
             // This is the real heart of the Update Function
             // Seperate Function used here so we perform getting input before
             // and then assign previous to the current after. 
+      
+
+            // Update All Objects
+            if (SceneList.Count > 0)
+            {
+                foreach (BaseGameObject go in SceneList)
+                {
+                    go.ObjectUpdate(gameTime);
+                }
+            }
             GameUpdate(gameTime);
+
+            // Clean up objects that are for Destruction
+            if (DestroyList.Count > 0)
+            {
+                foreach (BaseGameObject go in DestroyList)
+                {
+                    SceneList.Remove(go);
+                }
+                DestroyList.Clear();
+            }
+
+            if (AddList.Count > 0)
+            {
+                foreach (BaseGameObject go in AddList)
+                {
+                    SceneList.Add(go);
+                }
+                AddList.Clear();
+            }
+
 
             // Setting Current to Previous for next game tick
             keyboardPrevious = keyboardCurrent;
@@ -124,6 +177,16 @@ namespace MHanks_Lab5
         }
 
         //Utility Functions 
+
+
+        public virtual void ClearScene()
+        {
+            foreach (BaseGameObject go in SceneList)
+            {
+                go.Destroy(false);
+            }
+        }
+
 
         /// <summary>
         /// Returns true if key on keyboard was JUST PRESSED in current tick. 

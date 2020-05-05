@@ -17,8 +17,7 @@ namespace MHanks_Lab5
 
         public float moveSpeed;
 
-        public Rectangle playerRectangle;
-
+       
         public Player()
         {
 
@@ -29,7 +28,7 @@ namespace MHanks_Lab5
 
             playerSprite = new Sprite("Cursor");
             playerSprite.scale = .025f;
-            playerSprite.position = new Vector2(1280 / 2, 960 / 2);
+            playerSprite.position = (ScreenSize / 2);
             playerSprite.origin.X = playerSprite.texture.Width / 2;
             playerSprite.origin.Y = playerSprite.texture.Height / 2;
 
@@ -44,7 +43,7 @@ namespace MHanks_Lab5
             //Velocity.Y = moveSpeed;
 
 
-            playerRectangle = new Rectangle(0, 0, playerSprite.texture.Width, playerSprite.texture.Height);
+            Collision = new Rectangle(0, 0, (int) (playerSprite.texture.Width* playerSprite.scale), (int)(playerSprite.texture.Height * playerSprite.scale));
 
         }
 
@@ -52,35 +51,43 @@ namespace MHanks_Lab5
         {
             Position = playerSprite.position;
 
-            playerRectangle.Location = Position.ToPoint();
+            Collision.Location = Position.ToPoint();
 
-            if (Position.X >= ScreenSize.X)
+            if (Position.X > ScreenSize.X + ScreenBuffer)
             {
-                playerSprite.position.X = 1;
+                playerSprite.position.X  = -ScreenBuffer;
             }
 
-            if (Position.Y >= ScreenSize.Y)
+            if (Position.Y > ScreenSize.Y + ScreenBuffer)
             {
-                playerSprite.position.Y = 1;
+                playerSprite.position.Y = -ScreenBuffer;
             }
 
-            if (Position.X <= 0)
+            if (Position.X < -ScreenBuffer)
             {
-                playerSprite.position.X = ScreenSize.X - 1;
+                playerSprite.position.X = ScreenSize.X + ScreenBuffer;             
             }
 
-            if (Position.Y <= 0)
+            if (Position.Y < -ScreenBuffer)
             {
-                playerSprite.position.Y = ScreenSize.Y - 1;
+                playerSprite.position.Y = ScreenSize.Y + ScreenBuffer;
             }
 
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-   
+            if (Collision != null)
+            {
+                LinePrimatives.DrawRectangle(spriteBatch, 3, Color.Red, Collision);
+            }
             playerSprite.Draw(spriteBatch);
         }
 
+        public override void OnDestroy()
+        {
+            isActive = false;
+            GameApp.instance.SetGame(); 
+        }
     }
 }
